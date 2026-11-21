@@ -8,13 +8,13 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: cargo install --locked --git https://github.com/horizon-rust/horizon cargo-horizon-mod
       - run: |
-          cargo horizon-mod --help
           cargo horizon-mod new fly --template native
           cp lib.rs fly/src/lib.rs
           cd fly
-          cargo horizon-mod build || true
+          cargo horizon-mod build
           mkdir -p ../out
           find . -not -path './.horizon/*' \( -name '*.hnmod' -o -name '*.hmod' \) -exec cp {} ../out/ \;
+          for f in ../out/*.hmod; do [ -e "$f" ] && cp "$f" "${f%.hmod}.hnmod"; done
           ls -R ../out
       - uses: actions/upload-artifact@v4
         with:
