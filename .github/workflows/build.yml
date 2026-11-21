@@ -15,4 +15,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: fly-hmod
-          path: fly/target/horizon-mod/*.hmod
+          path: fly/target/horizon-mod/*.hnmod
