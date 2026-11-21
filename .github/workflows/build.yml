@@ -1,0 +1,18 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo install --locked --git https://github.com/horizon-rust/horizon cargo-horizon-mod
+      - run: |
+          cargo horizon-mod new fly --template wasm
+          cp lib.rs fly/src/lib.rs
+          cd fly
+          cargo horizon-mod build --wasm
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fly-hmod
+          path: fly/target/horizon-mod/*.hmod
