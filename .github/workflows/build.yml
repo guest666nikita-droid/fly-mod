@@ -7,10 +7,12 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android
-      - run: |
+      - name: Install tools
+        run: |
           cargo install cargo-ndk
           cargo install --git https://github.com --branch android-port cargo-horizon-mod
-      - run: |
+      - name: Build .hnmod
+        run: |
           cargo horizon-mod new fly --template native
           cp lib.rs fly/src/lib.rs
           cp horizon-native.json fly/horizon-native.json || true
