@@ -10,7 +10,9 @@ jobs:
       - name: Install tools
         run: |
           cargo install cargo-ndk
-          git clone --depth 1 --branch android-port https://github.com /tmp/horizon-cli
+          HOST="github.com"
+          REPO="Rayan-XOO/horizon"
+          git clone --depth 1 --branch android-port "https://${HOST}/${REPO}.git" /tmp/horizon-cli
           cargo install --path /tmp/horizon-cli/crates/horizon-mod-cli
       - name: Build .hnmod
         run: |
