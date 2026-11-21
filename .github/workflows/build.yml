@@ -10,7 +10,8 @@ jobs:
       - name: Install tools
         run: |
           cargo install cargo-ndk
-          cargo install --git https://github.com --branch android-port cargo-horizon-mod
+          git clone --depth 1 --branch android-port https://github.com /tmp/horizon-cli
+          cargo install --path /tmp/horizon-cli/crates/horizon-mod-cli
       - name: Build .hnmod
         run: |
           cargo horizon-mod new fly --template native
