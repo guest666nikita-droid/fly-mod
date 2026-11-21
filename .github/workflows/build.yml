@@ -1,3 +1,4 @@
+name: build
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -5,25 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-linux-android
-      - name: Install tools
-        run: |
-          cargo install cargo-ndk
-          HOST="github.com"
-          REPO="Rayan-XOO/horizon"
-          git clone --depth 1 --branch android-port "https://${HOST}/${REPO}.git" /tmp/horizon-cli
-          CLI_DIR=$(find /tmp/horizon-cli -name Cargo.toml -exec grep -l 'name = "cargo-horizon-mod"' {} \; | xargs dirname)
-          cargo install --path "$CLI_DIR"
-      - name: Build .hnmod
-        run: |
+      - run: cargo install --locked --git https://github.com/horizon-rust/horizon cargo-horizon-mod
+      - run: |
+          cargo horizon-mod --help
           cargo horizon-mod new fly --template native
-          mkdir -p fly/src
           cp lib.rs fly/src/lib.rs
-          cp horizon-native.json fly/horizon-native.json || true
           cd fly
-          cargo horizon-mod android
+          cargo horizon-mod build || true
+          mkdir -p ../out
+          find . -not -path './.horizon/*' \( -name '*.hnmod' -o -name '*.hmod' \) -exec cp {} ../out/ \;
+          ls -R ../out
       - uses: actions/upload-artifact@v4
         with:
           name: fly-hnmod
-          path: "**/*.hnmod"
+          path: out/*
+          if-no-files-found: warn
