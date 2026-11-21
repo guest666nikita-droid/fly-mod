@@ -18,6 +18,7 @@ jobs:
       - name: Build .hnmod
         run: |
           cargo horizon-mod new fly --template native
+          mkdir -p fly/src
           cp lib.rs fly/src/lib.rs
           cp horizon-native.json fly/horizon-native.json || true
           cd fly
